@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+    background: #292442;
+}
+
+@layer base {
+  :root {
+    --online: #10b981;
+    --warning: #f59e0b;
+    --offline: #ef4444;
+  }
+}
+
+@layer components {
+  .status-online {
+    @apply bg-green-500;
+  }
+  .status-warning {
+    @apply bg-yellow-500;
+  }
+  .status-offline {
+    @apply bg-red-500;
+  }
+  
+  .bg-online-light {
+    @apply bg-green-50 dark:bg-green-900/20;
+  }
+  .bg-warning-light {
+    @apply bg-yellow-50 dark:bg-yellow-900/20;
+  }
+  .bg-offline-light {
+    @apply bg-red-50 dark:bg-red-900/20;
+  }
+  
+  .border-online {
+    @apply border-l-green-500;
+  }
+  .border-warning {
+    @apply border-l-yellow-500;
+  }
+  .border-offline {
+    @apply border-l-red-500;
+  }
+  
+  .text-online {
+    @apply text-green-700 dark:text-green-300;
+  }
+  .text-warning {
+    @apply text-yellow-700 dark:text-yellow-300;
+  }
+  .text-offline {
+    @apply text-red-700 dark:text-red-300;
+  }
+}
