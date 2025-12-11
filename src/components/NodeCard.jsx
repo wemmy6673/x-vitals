@@ -38,24 +38,24 @@ const NodeCard = ({ node }) => {
 
   return (
     <div className={classNames(
-      'rounded-lg p-4 border-l-4',
+      'rounded-lg p-1 bg-transparent border-l-4 border-r-4 border-b-4',
       statusClasses.bg,
       statusClasses.border,
-      'card-hover',
+      '',
       ''
     )}>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0 pt-1">
             <div className={classNames(
-              'w-3 h-3 rounded-full animate-pulse text-white',
+              'w-3 h-3 rounded-full animate-pulse',
               statusClasses.dot
             )} />
           </div>
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
-              <code className="font-mono text-sm font-semibold dark:text-white">
+              <code className="font-mono text-sm font-semibold text-white">
                 {node.shortId}
               </code>
               <button
