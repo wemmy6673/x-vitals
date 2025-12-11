@@ -5,18 +5,18 @@ const Header = ({ theme, toggleTheme, onRefresh, isLoading }) => {
   return (
     <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center ">
-          
+        <h1 className="text-3xl font-bold text-white flex items-center ">
+
           X-Vitals
           <div className="w-10 h-10 flex items-center justify-center">
             <span className="text-xl">❤️</span>
           </div>
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
+        <p className="text-white mt-2">
           Real-time monitoring of Xandeum pNodes
         </p>
       </div>
-      
+
       <div className="flex items-center gap-3">
         <button
           onClick={onRefresh}
@@ -26,8 +26,8 @@ const Header = ({ theme, toggleTheme, onRefresh, isLoading }) => {
           <FiRefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
           {isLoading ? 'Refreshing...' : 'Refresh'}
         </button>
-        
-        
+
+
       </div>
     </header>
   );

@@ -19,13 +19,13 @@ const StatsBar = ({ stats, lastUpdated, totalNodes }) => {
       <div className="bg-transparent rounded-xl px-4 py-8 shadow-lg border border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Total Nodes</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+            <p className="text-sm text-white">Total Nodes</p>
+            <p className="text-2xl font-bold text-white">
               {totalNodes}
             </p>
           </div>
-          <div className="p-2 rounded-full bg-blue-100 dark:bg-blue-900/30">
-            <FaCircleNodes className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+          <div className="p-2 rounded-full">
+            <FaCircleNodes className="w-6 h-6 text-blue-600" />
           </div>
         </div>
       </div>
@@ -33,13 +33,13 @@ const StatsBar = ({ stats, lastUpdated, totalNodes }) => {
       <div className="bg-transparent rounded-xl px-4 py-8 shadow-lg border border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Avg Uptime</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+            <p className="text-sm text-white">Avg Uptime</p>
+            <p className="text-2xl font-bold text-white">
               {stats.avgUptime.toFixed(1)}%
             </p>
           </div>
-          <div className="p-2 rounded-full bg-green-100 dark:bg-green-900/30">
-            <FiCheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
+          <div className="p-2 rounded-full">
+            <FiCheckCircle className="w-6 h-6 text-green-600" />
           </div>
         </div>
       </div>
@@ -47,9 +47,9 @@ const StatsBar = ({ stats, lastUpdated, totalNodes }) => {
       <div className="bg-transparent rounded-xl px-4 py-8 shadow-lg border border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Network Health</p>
+            <p className="text-sm text-white">Network Health</p>
             <div className="flex items-center gap-2">
-              <p className="text-2xl font-bold text-gray-900 text-white">
+              <p className="text-2xl font-bold text-white">
                 {stats.health.charAt(0).toUpperCase() + stats.health.slice(1)}
               </p>
               <HealthIcon className={`w-5 h-5 ${health.color}`} />
@@ -64,15 +64,15 @@ const StatsBar = ({ stats, lastUpdated, totalNodes }) => {
       <div className="bg-transparent rounded-xl px-4 py-8 shadow-sm border border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Last Updated</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
-              {lastUpdated ? lastUpdated.toLocaleTimeString([], { 
-                hour: '2-digit', 
-                minute: '2-digit' 
+            <p className="text-sm text-white">Last Updated</p>
+            <p className="text-2xl font-bold text-white">
+              {lastUpdated ? lastUpdated.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
               }) : '--:--'}
             </p>
           </div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">
+          <div className="text-xs text-white">
             {lastUpdated ? 'just now' : 'never'}
           </div>
         </div>

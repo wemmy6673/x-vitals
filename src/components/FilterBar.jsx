@@ -22,18 +22,18 @@ const FilterBar = ({ activeFilter, onFilterChange, stats }) => {
               activeFilter === filter.id
                 ? filter.id === 'all'
                   ? 'bg-gray-900 dark:bg-gray-700 text-white'
-                  : `bg-${filter.color} bg-opacity-20 dark:bg-opacity-30 
+                  : `bg-${filter.color} 
                      text-${filter.color} dark:text-${filter.color}-300 
                      border border-${filter.color}`
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                : 'text-white'
             )}
           >
             <span>{filter.label}</span>
             <span className={classNames(
               'px-2 py-0.5 text-xs rounded-full',
               activeFilter === filter.id
-                ? 'bg-white dark:bg-gray-800'
-                : 'bg-gray-200 dark:bg-gray-700'
+                ? ''
+                : ''
             )}>
               {filter.count}
             </span>
