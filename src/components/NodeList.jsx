@@ -45,7 +45,7 @@ const NodeList = ({ nodes, isLoading, error }) => {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-6">
       {nodes.map(node => (
         <NodeCard key={node.id} node={node} />
       ))}
