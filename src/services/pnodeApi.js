@@ -1,84 +1,106 @@
-import axios from 'axios';
+import { PrpcClient } from 'xandeum-prpc';
 
-const P_RPC_URL = 'https://pnode.xandeum.network';
-
-// Cache implementation
-const cache = {
-  data: null,
-  timestamp: 0,
-  ttl: 30000, // 30 seconds
-};
-
-export const fetchPNodes = async () => {
-  // Return cached data if valid
-  if (cache.data && Date.now() - cache.timestamp < cache.ttl) {
-    return cache.data;
+class PNodeApiService {
+  constructor() {
+    // Initialize with a seed node IP
+    this.client = new PrpcClient('173.212.220.65', { timeout: 10000 });
+    this.cache = {
+      pods: null,
+      timestamp: 0,
+      ttl: 30000, // 30 seconds cache
+    };
   }
 
-  try {
-    // TODO: Replace with actual pRPC endpoint and method
-    // This is a placeholder - adjust based on actual API
-    const response = await axios.post(P_RPC_URL, {
-      jsonrpc: '2.0',
-      method: 'getClusterNodes',
-      id: 1,
-      params: []
-    });
-
-    const nodes = response.data.result || generateMockData();
-    
-    // Update cache
-    cache.data = nodes;
-    cache.timestamp = Date.now();
-    
-    return nodes;
-    
-  } catch (error) {
-    console.error('pRPC Error:', error.message);
-    // Fallback to mock data for development
-    return generateMockData();
-  }
-};
-
-// Mock data generator for development
-const generateMockData = () => {
-  const nodes = [];
-  const nodeCount = 20 + Math.floor(Math.random() * 30); // 20-50 nodes
-  
-  for (let i = 0; i < nodeCount; i++) {
-    const uptime = 70 + Math.random() * 30; // 70-100%
-    
-    nodes.push({
-      id: `Xn${Math.random().toString(36).substr(2, 10).toUpperCase()}`,
-      uptime: parseFloat(uptime.toFixed(2)),
-      version: `2.${Math.floor(Math.random() * 3)}.${Math.floor(Math.random() * 10)}`,
-      stake: Math.floor(Math.random() * 1000000) + 10000,
-      lastSeen: Date.now() - Math.floor(Math.random() * 3600000), // Up to 1 hour ago
-      ip: `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
-      port: 8000 + Math.floor(Math.random() * 1000),
-      location: ['US', 'EU', 'ASIA', 'AU'][Math.floor(Math.random() * 4)],
-    });
-  }
-  
-  return nodes;
-};
-
-// For real implementation:
-export const fetchRealPNodes = async () => {
-  try {
-    const response = await axios.post(P_RPC_URL, {
-      jsonrpc: '2.0',
-      method: 'getClusterNodes',
-      id: 1,
-      params: []
-    });
-    
-    if (!response.data) {
-      throw new Error('No data received from pRPC');
+  /**
+   * Get all pods with detailed statistics from the network
+   */
+  async getPodsWithStats() {
+    // Check cache first
+    if (this.cache.pods && Date.now() - this.cache.timestamp < this.cache.ttl) {
+      return this.cache.pods;
     }
-    
-    return response.data.result || response.data;
-  } catch (error) {
-    throw new Error(`Failed to fetch pNodes: ${error.message}`);
+
+    try {
+      console.log('Fetching pods with stats from Xandeum network...');
+      const response = await this.client.getPodsWithStats();
+
+      // Update cache
+      this.cache.pods = response;
+      this.cache.timestamp = Date.now();
+
+      console.log(`Successfully fetched ${response.total_count} pods`);
+      return response;
+
+    } catch (error) {
+      console.error('Failed to fetch pods with stats:', error.message);
+      throw new Error(`Network error: ${error.message}`);
+    }
   }
-};
+
+  /**
+   * Get statistics for a specific node
+   */
+  async getNodeStats(nodePubkey) {
+    try {
+      // First, find the node using the helper function
+      const node = await PrpcClient.findPNode(nodePubkey, {
+        timeout: 8000
+      });
+
+      if (!node) {
+        throw new Error(`Node ${nodePubkey} not found`);
+      }
+
+      // Create a client for the found node
+      const nodeClient = new PrpcClient(node.address.split(':')[0]);
+      const stats = await nodeClient.getStats();
+
+      return {
+        ...stats,
+        address: node.address,
+        pubkey: nodePubkey
+      };
+
+    } catch (error) {
+      console.error(`Failed to get stats for node ${nodePubkey}:`, error.message);
+      throw error;
+    }
+  }
+
+  /**
+   * Find a specific pNode by its public key
+   */
+  async findPNode(nodeId, options = {}) {
+    try {
+      const node = await PrpcClient.findPNode(nodeId, {
+        timeout: 8000,
+        ...options
+      });
+
+      if (!node) {
+        throw new Error(`Node ${nodeId} not found in network`);
+      }
+
+      return node;
+    } catch (error) {
+      console.error(`Failed to find node ${nodeId}:`, error.message);
+      throw error;
+    }
+  }
+
+  /**
+   * Get just the pod list (without detailed stats)
+   */
+  async getPods() {
+    try {
+      const response = await this.client.getPods();
+      return response;
+    } catch (error) {
+      console.error('Failed to fetch pods:', error.message);
+      throw error;
+    }
+  }
+}
+
+// Export a singleton instance
+export default new PNodeApiService();

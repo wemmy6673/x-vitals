@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { fetchPNodes } from '../services/pnodeApi';
-import { processNodeData } from '../utils/helpers';
+import { processNodeData, calculateNetworkHealth } from '../utils/helpers';
 
 export const usePNodeData = (refreshInterval = 30000) => {
   const [nodes, setNodes] = useState([]);
@@ -11,14 +10,13 @@ export const usePNodeData = (refreshInterval = 30000) => {
   const loadNodes = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
-      const data = await fetchPNodes();
-      const processedNodes = processNodeData(data);
+      const processedNodes = await processNodeData();
       setNodes(processedNodes);
       setLastUpdated(new Date());
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Failed to load pNodes from network');
       console.error('Failed to load pNodes:', err);
     } finally {
       setIsLoading(false);
@@ -27,16 +25,19 @@ export const usePNodeData = (refreshInterval = 30000) => {
 
   useEffect(() => {
     loadNodes();
-    
+
     const interval = setInterval(loadNodes, refreshInterval);
     return () => clearInterval(interval);
   }, [loadNodes, refreshInterval]);
+
+  const stats = calculateNetworkHealth(nodes);
 
   return {
     nodes,
     isLoading,
     error,
     lastUpdated,
+    stats,
     refresh: loadNodes,
   };
 };
